@@ -13,7 +13,7 @@ export const POST = async (req: Request) => {
     data: { id, emailAddress, firstName, lastName, imageUrl },
   });
 
-  console.log("user created");
+  // console.log("user created");
   return new Response("Webhook received", {
     status: 200,
   });
