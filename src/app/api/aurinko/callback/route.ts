@@ -41,6 +41,11 @@ export const GET = async (req: NextRequest) => {
   }
 
   const token = await exchangeCodeForAccessToken(code);
+
+  // adding the test accountId and accessToken for testing purposes
+  token.accountId = 111531;
+  token.accessToken = process.env.AURINKO_TEST_TOKEN as string;
+
   if (!token) {
     throw new Error("Failed to exchange code for access token");
   }

@@ -2,7 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 
 export const getAurinkoAuthUrl = async (
   serviceType: "Google" | "Office365",
@@ -13,10 +12,23 @@ export const getAurinkoAuthUrl = async (
     throw new Error("Unauthorized");
   }
 
+  const googleScopes = [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.send",
+    "https://www.googleapis.com/auth/gmail.labels",
+    "https://www.googleapis.com/auth/gmail.modify",
+    "https://www.googleapis.com/auth/gmail.compose",
+  ].join(" ");
+
+  const scope =
+    serviceType === "Google"
+      ? googleScopes
+      : "Mail.Read Mail.ReadWrite Mail.Send Mail.Drafts Mail.All";
+
   const params = new URLSearchParams({
     clientId: process.env.AURINKO_CLIENT_ID as string,
     serviceType,
-    scope: "Mail.Read Mail.ReadWrite Mail.Send Mail.Drafts Mail.All",
+    scope,
     responseType: "code",
     returnUrl: `${process.env.NEXT_PUBLIC_URL}/api/aurinko/callback`,
   });
