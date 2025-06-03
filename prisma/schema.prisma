@@ -114,6 +114,8 @@ model EmailAddress {
 
     accountId String
     account   Account @relation(fields: [accountId], references: [id])
+
+    @@unique([accountId, address], name: "accountId_address")
 }
 
 model EmailAttachment {

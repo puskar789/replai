@@ -256,35 +256,28 @@ async function upsertAttachment(emailId: string, attachment: EmailAttachment) {
   }
 }
 
-const upsertEmailAddress = async (address: EmailAddress, accountId: string) => {
+async function upsertEmailAddress(address: EmailAddress, accountId: string) {
   try {
-    const exisitingAddress = await db.emailAddress.findUnique({
+    return await db.emailAddress.upsert({
       where: {
         accountId_address: {
-          accountId: accountId,
-          address: address.address ?? " ",
+          accountId,
+          address: address.address ?? "",
         },
       },
+      update: {
+        name: address.name,
+        raw: address.raw,
+      },
+      create: {
+        accountId,
+        address: address.address ?? "",
+        name: address.name,
+        raw: address.raw,
+      },
     });
-
-    if (exisitingAddress) {
-      return await db.emailAddress.findUnique({
-        where: {
-          id: exisitingAddress.id,
-        },
-      });
-    } else {
-      return await db.emailAddress.create({
-        data: {
-          address: address.address ?? " ",
-          name: address.name,
-          raw: address.raw,
-          accountId,
-        },
-      });
-    }
   } catch (error) {
-    console.error("Failed to upsert email address", error);
+    console.log(`Failed to upsert email address: ${error}`);
     return null;
   }
-};
+}
