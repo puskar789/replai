@@ -4,6 +4,7 @@ import React from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { Nav } from "./nav";
 import { File, Inbox, Send } from "lucide-react";
+import { api } from "@/trpc/react";
 
 type Props = {
   isCollapsed: boolean;
@@ -16,25 +17,38 @@ const Sidebar = ({ isCollapsed }: Props) => {
     "inbox",
   );
 
+  const { data: inboxThreads } = api.account.getNumThreads.useQuery({
+    accountId,
+    tab: "inbox",
+  });
+  const { data: draftThreads } = api.account.getNumThreads.useQuery({
+    accountId,
+    tab: "draft",
+  });
+  const { data: sentThreads } = api.account.getNumThreads.useQuery({
+    accountId,
+    tab: "sent",
+  });
+
   return (
     <Nav
       isCollapsed={isCollapsed}
       links={[
         {
           title: "Inbox",
-          label: "1",
+          label: inboxThreads?.toString() ?? "0",
           icon: Inbox,
           variant: tab === "inbox" ? "default" : "ghost",
         },
         {
           title: "Draft",
-          label: "4",
+          label: draftThreads?.toString() ?? "0",
           icon: File,
           variant: tab === "draft" ? "default" : "ghost",
         },
         {
           title: "Sent",
-          label: "6",
+          label: sentThreads?.toString() ?? "0",
           icon: Send,
           variant: tab === "sent" ? "default" : "ghost",
         },
