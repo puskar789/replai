@@ -60,4 +60,49 @@ export const accountRouter = createTRPCRouter({
         },
       });
     }),
+  getThreads: privateProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        tab: z.string(),
+        done: z.boolean(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+
+      return await ctx.db.thread.findMany({
+        where: {
+          accountId: account.id,
+          inboxStatus: input.tab === "inbox" ? true : false,
+          draftStatus: input.tab === "draft" ? true : false,
+          sentStatus: input.tab === "sent" ? true : false,
+          done: input.done,
+        },
+        include: {
+          emails: {
+            orderBy: {
+              sentAt: "asc",
+            },
+            select: {
+              from: true,
+              body: true,
+              bodySnippet: true,
+              emailLabel: true,
+              subject: true,
+              sysLabels: true,
+              id: true,
+              sentAt: true,
+            },
+          },
+        },
+        take: 15,
+        orderBy: {
+          lastMessageDate: "desc",
+        },
+      });
+    }),
 });
