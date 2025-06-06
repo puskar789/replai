@@ -14,6 +14,7 @@ import AccountSwitcher from "./account-switcher";
 import Sidebar from "./sidebar";
 import ThreadList from "./thread-list";
 import ThreadDisplay from "./thread-display";
+import { useLocalStorage } from "usehooks-ts";
 
 type Props = {
   defaultLayout: number[] | undefined;
@@ -27,6 +28,7 @@ const Mail = ({
   defaultCollapsed,
 }: Props) => {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
+  const [done, setDone] = useLocalStorage("replai-done", false);
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -70,19 +72,25 @@ const Mail = ({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-          <Tabs defaultValue="inbox">
+          <Tabs defaultValue="inbox" value={done ? "done" : "inbox"}>
             <div className="flex items-center px-4 py-1">
               <h1 className="text-xl font-bold">Inbox</h1>
               <TabsList className="ml-auto">
                 <TabsTrigger
                   value="inbox"
                   className="text-zinc-600 dark:text-zinc-200"
+                  onClick={() => {
+                    setDone(false);
+                  }}
                 >
                   Inbox
                 </TabsTrigger>
                 <TabsTrigger
                   value="done"
                   className="text-zinc-600 dark:text-zinc-200"
+                  onClick={() => {
+                    setDone(true);
+                  }}
                 >
                   Done
                 </TabsTrigger>
