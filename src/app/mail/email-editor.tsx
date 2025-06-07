@@ -8,12 +8,37 @@ import EditorMenubar from "./editor-menubar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import TagInput from "./tag-input";
+import { Input } from "@/components/ui/input";
 
-type Props = {};
+type Props = {
+  subject: string;
+  setSubject: (value: string) => void;
+  toValues: { label: string; value: string }[];
+  setToValues: (values: { label: string; value: string }[]) => void;
+  ccValues: { label: string; value: string }[];
+  setCcValues: (values: { label: string; value: string }[]) => void;
+  to: string[];
+  handleSend: (value: string) => void;
+  isSending: boolean;
+  defaultToolbarExpanded?: boolean;
+};
 
-const EmailEditor = ({}: Props) => {
+const EmailEditor = ({
+  subject,
+  setSubject,
+  toValues,
+  setToValues,
+  ccValues,
+  setCcValues,
+  to,
+  handleSend,
+  isSending,
+  defaultToolbarExpanded,
+}: Props) => {
   const [value, setValue] = useState<string>("");
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(
+    defaultToolbarExpanded || false,
+  );
 
   const CustomText = Text.extend({
     addKeyboardShortcuts() {
@@ -27,7 +52,7 @@ const EmailEditor = ({}: Props) => {
   });
 
   const editor = useEditor({
-    autofocus: false,
+    autofocus: true,
     extensions: [StarterKit, CustomText],
     onUpdate: ({ editor }) => {
       setValue(editor.getHTML());
@@ -47,11 +72,22 @@ const EmailEditor = ({}: Props) => {
         {expanded && (
           <>
             <TagInput
-              defaultValues={[]}
               label="To"
-              onChange={console.log}
+              onChange={setToValues}
               placeholder="Add Recipients"
-              value={[]}
+              value={toValues}
+            />
+            <TagInput
+              label="Cc"
+              onChange={setCcValues}
+              placeholder="Add Recipients"
+              value={ccValues}
+            />
+            <Input
+              id="subject"
+              placeholder="Subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
             />
           </>
         )}
@@ -61,15 +97,15 @@ const EmailEditor = ({}: Props) => {
             onClick={() => setExpanded(!expanded)}
           >
             <span className="font-medium text-green-600">Draft </span>
-            <span>to Mandem</span>
+            <span>to {to.join(", ")}</span>
           </div>
         </div>
       </div>
-      <div className="prose w-full px-4">
+      <div className="prose w-full px-4 py-2">
         <EditorContent editor={editor} value={value} />
       </div>
       <Separator />
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex items-center justify-between px-4 py-2">
         <span className="text-sm">
           Tip: Press{" "}
           <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
@@ -77,7 +113,15 @@ const EmailEditor = ({}: Props) => {
           </kbd>{" "}
           for AI autocomplete
         </span>
-        <Button>Send</Button>
+        <Button
+          onClick={async () => {
+            editor?.commands?.clearContent();
+            await handleSend(value);
+          }}
+          disabled={isSending}
+        >
+          Send
+        </Button>
       </div>
     </div>
   );
