@@ -103,7 +103,7 @@ const ThreadDisplay = () => {
               )}
             </div>
             <Separator />
-            <div className="flex max-h-[calc(100vh-400px)] flex-col overflow-scroll">
+            <div className="flex max-h-[calc(100vh-475px)] flex-col overflow-scroll">
               <div className="flex flex-col gap-4 p-6">
                 {thread.emails.map((email) => {
                   return <EmailDisplay key={email.id} email={email} />;

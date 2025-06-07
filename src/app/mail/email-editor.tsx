@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
+import AIComposeButton from "./ai-compose-button";
 
 type Props = {
   subject: string;
@@ -63,6 +64,10 @@ const EmailEditor = ({
     return null;
   }
 
+  const onGenerate = async (token: string) => {
+    console.log("AI generation triggered with token:", token);
+  };
+
   return (
     <div>
       <div className="flex border-b p-4 py-2">
@@ -99,6 +104,10 @@ const EmailEditor = ({
             <span className="font-medium text-green-600">Draft </span>
             <span>to {to.join(", ")}</span>
           </div>
+          <AIComposeButton
+            isComposing={defaultToolbarExpanded || false}
+            onGenerate={onGenerate}
+          />
         </div>
       </div>
       <div className="prose w-full px-4 py-2">
