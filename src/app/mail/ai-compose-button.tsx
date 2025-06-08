@@ -12,15 +12,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { Bot } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { generateEmail } from "./action";
+import { readStreamableValue } from "ai/rsc";
 
 type Props = {
   isComposing: boolean;
   onGenerate: (token: string) => void;
 };
 
-const AIComposeButton = (props: Props) => {
+const AIComposeButton = ({ isComposing, onGenerate }: Props) => {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
+
+  const aiGenerate = async () => {
+    const { output } = await generateEmail("", prompt);
+    for await (const token of readStreamableValue(output)) {
+      if (token) {
+        // console.log("AI generation triggered with token:", token);
+        onGenerate(token);
+      }
+    }
+  };
 
   return (
     <div>
@@ -45,6 +57,7 @@ const AIComposeButton = (props: Props) => {
             <div className="h-2"></div>
             <Button
               onClick={() => {
+                aiGenerate();
                 setOpen(false);
                 setPrompt("");
               }}

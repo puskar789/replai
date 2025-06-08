@@ -1,7 +1,8 @@
 "use server";
 
 import { streamText } from "ai";
-import { openai } from "@ai-sdk/openai";
+// import { openai } from "@ai-sdk/openai";
+import { mistral } from "@ai-sdk/mistral";
 import { createStreamableValue } from "ai/rsc";
 
 export const generateEmail = async (context: string, prompt: string) => {
@@ -9,7 +10,7 @@ export const generateEmail = async (context: string, prompt: string) => {
 
   (async () => {
     const { textStream } = await streamText({
-      model: openai("gpt-4-turbo"),
+      model: mistral("mistral-large-latest"),
       prompt: `
             You are an AI email assistant embedded in an email client app. Your purpose is to help the user compose emails by providing suggestions and relevant information based on the context of their previous emails.
             
@@ -36,6 +37,7 @@ export const generateEmail = async (context: string, prompt: string) => {
     });
 
     for await (const token of textStream) {
+      console.log("token: ", token);
       stream.update(token);
     }
 
