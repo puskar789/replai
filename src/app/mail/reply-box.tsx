@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import EmailEditor from "./email-editor";
 import { api, type RouterOutputs } from "@/trpc/react";
 import useThreads from "@/hooks/use-threads";
+import toast from "react-hot-toast";
 
 const ReplyBox = () => {
   const { threadId, accountId } = useThreads();
@@ -55,8 +56,39 @@ const Component = ({
     );
   }, [threadId, replyDetails]);
 
+  const sendEmail = api.account.sendEmail.useMutation();
+
   const handleSend = async (value: string) => {
-    console.log("Sending email with value:", value);
+    if (!replyDetails) return;
+
+    sendEmail.mutate(
+      {
+        accountId,
+        threadId: threadId ?? undefined,
+        body: value,
+        subject,
+        from: replyDetails.from,
+        to: replyDetails.to.map((to) => ({
+          address: to.address,
+          name: to.name ?? "",
+        })),
+        cc: replyDetails.cc.map((cc) => ({
+          address: cc.address,
+          name: cc.name ?? "",
+        })),
+        replyTo: replyDetails.from,
+        inReplyTo: replyDetails.id,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Email sent successfully");
+        },
+        onError: (error) => {
+          console.log(error);
+          toast.error("Failed to send email");
+        },
+      },
+    );
   };
 
   return (
@@ -68,7 +100,7 @@ const Component = ({
       ccValues={ccValues}
       setCcValues={setCcValues}
       to={replyDetails.to.map((to) => to.address)}
-      isSending={false}
+      isSending={sendEmail.isPending}
       handleSend={handleSend}
     />
   );

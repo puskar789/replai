@@ -37,8 +37,8 @@ export default function RootLayout({
           >
             <TRPCReactProvider>
               <Kbar>
-                <Toaster />
                 {children}
+                <Toaster />
               </Kbar>
             </TRPCReactProvider>
           </ThemeProvider>
