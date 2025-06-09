@@ -50,8 +50,6 @@ const AIComposeButton = ({ isComposing, onGenerate }: Props) => {
     My name is ${account?.name} and my email is ${account?.emailAddress}.
     `;
 
-    console.log(context);
-
     const { output } = await generateEmail(context, prompt);
     for await (const token of readStreamableValue(output)) {
       if (token) {
@@ -88,7 +86,7 @@ const AIComposeButton = ({ isComposing, onGenerate }: Props) => {
                 setPrompt("");
                 toast("Generating the email. Please wait...", {
                   icon: "🤖",
-                  duration: 1000,
+                  duration: 2000,
                 });
                 aiGenerate();
               }}

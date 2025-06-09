@@ -79,22 +79,24 @@ const ComposeButton = () => {
           Compose
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="flex max-h-[90vh] flex-col overflow-hidden">
         <DrawerHeader>
           <DrawerTitle>Compose Email</DrawerTitle>
         </DrawerHeader>
-        <EmailEditor
-          toValues={toValues}
-          setToValues={setToValues}
-          ccValues={ccValues}
-          setCcValues={setCcValues}
-          subject={subject}
-          setSubject={setSubject}
-          handleSend={handleSend}
-          isSending={sendEmail.isPending}
-          to={toValues.map((to) => to.value)}
-          defaultToolbarExpanded={true}
-        />
+        <div className="flex-1 overflow-y-auto">
+          <EmailEditor
+            toValues={toValues}
+            setToValues={setToValues}
+            ccValues={ccValues}
+            setCcValues={setCcValues}
+            subject={subject}
+            setSubject={setSubject}
+            handleSend={handleSend}
+            isSending={sendEmail.isPending}
+            to={toValues.map((to) => to.value)}
+            defaultToolbarExpanded={true}
+          />
+        </div>
       </DrawerContent>
     </Drawer>
   );
