@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Text } from "@tiptap/extension-text";
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import AIComposeButton from "./ai-compose-button";
+import { generate } from "./action";
+import { readStreamableValue } from "ai/rsc";
 
 type Props = {
   subject: string;
@@ -40,12 +42,22 @@ const EmailEditor = ({
   const [expanded, setExpanded] = useState<boolean>(
     defaultToolbarExpanded || false,
   );
+  const [token, setToken] = useState<string>("");
+
+  const aiGenerate = async (prompt: string) => {
+    const { output } = await generate(prompt);
+    for await (const token of readStreamableValue(output)) {
+      if (token) {
+        setToken(token);
+      }
+    }
+  };
 
   const CustomText = Text.extend({
     addKeyboardShortcuts() {
       return {
         "Meta-j": () => {
-          console.log("Meta-j pressed");
+          aiGenerate(this.editor.getText());
           return true;
         },
       };
@@ -60,13 +72,17 @@ const EmailEditor = ({
     },
   });
 
+  useEffect(() => {
+    editor?.commands?.insertContent(token);
+  }, [editor, token]);
+
+  const onGenerate = async (token: string) => {
+    editor?.commands?.insertContent(token);
+  };
+
   if (!editor) {
     return null;
   }
-
-  const onGenerate = async (token: string) => {
-    console.log("AI generation triggered with token:", token);
-  };
 
   return (
     <div>
@@ -118,7 +134,7 @@ const EmailEditor = ({
         <span className="text-sm">
           Tip: Press{" "}
           <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-            ctrl + j
+            Win + j
           </kbd>{" "}
           for AI autocomplete
         </span>

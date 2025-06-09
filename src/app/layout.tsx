@@ -9,6 +9,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import Kbar from "@/components/kbar";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "ReplAI",
@@ -35,7 +36,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <TRPCReactProvider>
-              <Kbar>{children}</Kbar>
+              <Kbar>
+                <Toaster />
+                {children}
+              </Kbar>
             </TRPCReactProvider>
           </ThemeProvider>
         </body>
