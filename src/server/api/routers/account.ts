@@ -76,6 +76,8 @@ export const accountRouter = createTRPCRouter({
         input.accountId,
         ctx.auth.userId,
       );
+      const acc = new Account(account.token);
+      await acc.syncEmails();
 
       return await ctx.db.thread.findMany({
         where: {

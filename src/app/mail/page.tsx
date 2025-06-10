@@ -3,7 +3,8 @@
 import ThemeToggle from "@/components/theme-toggle";
 import { UserButton } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
-import ComposeButton from "./compose-button";
+
+const ComposeButton = dynamic(() => import("./compose-button"), { ssr: false });
 
 const Mail = dynamic(
   () => {
