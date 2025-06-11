@@ -1,5 +1,7 @@
 import { db } from "@/server/db";
 import type { EmailAddress, EmailAttachment, EmailMessage } from "@/types";
+import { OramaClient } from "./orama";
+import { turndown } from "./turndown";
 // import pLimit from "p-limit";
 
 export const syncEmailsToDatabase = async (
@@ -9,12 +11,25 @@ export const syncEmailsToDatabase = async (
   console.log("Attempting to sync emails to the database", emails.length);
   // const limit = pLimit(10);
 
+  const orama = new OramaClient(accountId);
+  await orama.initialize();
+
   try {
     // await Promise.all(
     //   emails.map((email, index) => upsertEmail(email, accountId, index)),
     // );
     for (const email of emails) {
-      upsertEmail(email, accountId, 0);
+      const body = turndown.turndown(email.body ?? email.bodySnippet ?? "");
+      await orama.insert({
+        subject: email.subject,
+        body: body,
+        from: email.from.address,
+        rawBody: email.bodySnippet ?? "",
+        to: email.to.map((to) => to.address),
+        sentAt: email.sentAt.toLocaleString(),
+        threadId: email.threadId,
+      });
+      await upsertEmail(email, accountId, 0);
     }
   } catch (error) {
     console.error("Error syncing emails to the database", error);

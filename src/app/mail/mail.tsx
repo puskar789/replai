@@ -15,6 +15,7 @@ import Sidebar from "./sidebar";
 import ThreadList from "./thread-list";
 import ThreadDisplay from "./thread-display";
 import { useLocalStorage } from "usehooks-ts";
+import SearchBar from "./search-bar";
 
 type Props = {
   defaultLayout: number[] | undefined;
@@ -98,7 +99,7 @@ const Mail = ({
             </div>
             <Separator />
             {/* Search bar*/}
-            Search Bar
+            <SearchBar />
             <TabsContent value="inbox">
               <ThreadList />
             </TabsContent>

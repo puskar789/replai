@@ -1,5 +1,5 @@
-import LinkAccountButton from "@/components/link-account-button";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
-  return <LinkAccountButton />;
+  return redirect("/mail");
 }

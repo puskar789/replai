@@ -17,9 +17,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import EmailDisplay from "./email-display";
 import ReplyBox from "./reply-box";
+import { useAtom } from "jotai";
+import { isSearchingAtom } from "./search-bar";
+import SearchDisplay from "./search-display";
 
 const ThreadDisplay = () => {
   const { threadId, threads } = useThreads();
+  const [isSearching] = useAtom(isSearchingAtom);
 
   const thread = threads?.find((t) => t.id === threadId);
 
@@ -69,7 +73,9 @@ const ThreadDisplay = () => {
         </div>
       </div>
       <Separator />
-      {thread ? (
+      {isSearching ? (
+        <SearchDisplay />
+      ) : thread ? (
         <>
           <div className="flex flex-1 flex-col overflow-scroll">
             <div className="flex items-center p-4">

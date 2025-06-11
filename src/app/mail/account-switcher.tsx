@@ -36,6 +36,9 @@ const AccountSwitcher = ({ isCollapsed }: Props) => {
         aria-label="Select account"
       >
         <SelectValue placeholder="Select an Account">
+          {(accountId === "" || !data || data.length === 0) && (
+            <span>Select an Account</span>
+          )}
           <span className={cn(!isCollapsed && "hidden")}>
             {data.find((account) => account.id === accountId)?.emailAddress[0]}
           </span>
