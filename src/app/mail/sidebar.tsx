@@ -17,18 +17,35 @@ const Sidebar = ({ isCollapsed }: Props) => {
     "inbox",
   );
 
-  const { data: inboxThreads } = api.account.getNumThreads.useQuery({
-    accountId,
-    tab: "inbox",
-  });
-  const { data: draftThreads } = api.account.getNumThreads.useQuery({
-    accountId,
-    tab: "draft",
-  });
-  const { data: sentThreads } = api.account.getNumThreads.useQuery({
-    accountId,
-    tab: "sent",
-  });
+  const { data: inboxThreads } = api.account.getNumThreads.useQuery(
+    {
+      accountId,
+      tab: "inbox",
+    },
+    {
+      refetchInterval: 5000,
+    },
+  );
+
+  const { data: draftThreads } = api.account.getNumThreads.useQuery(
+    {
+      accountId,
+      tab: "draft",
+    },
+    {
+      refetchInterval: 5000,
+    },
+  );
+
+  const { data: sentThreads } = api.account.getNumThreads.useQuery(
+    {
+      accountId,
+      tab: "sent",
+    },
+    {
+      refetchInterval: 5000,
+    },
+  );
 
   return (
     <Nav
