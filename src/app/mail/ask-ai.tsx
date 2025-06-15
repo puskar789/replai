@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Send, SparklesIcon } from "lucide-react";
@@ -10,6 +10,7 @@ import useThreads from "@/hooks/use-threads";
 
 const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { accountId } = useThreads();
+  const messageContainerRef = useRef<HTMLDivElement>(null);
 
   const { input, handleInputChange, handleSubmit, messages } = useChat({
     api: "api/chat",
@@ -20,6 +21,15 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
     initialMessages: [],
   });
 
+  useEffect(() => {
+    if (!messageContainerRef.current) return;
+
+    messageContainerRef.current.scrollTo({
+      top: messageContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages]);
+
   if (isCollapsed) return null;
 
   return (
@@ -28,6 +38,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
         <div
           className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-scroll"
           id="message-container"
+          ref={messageContainerRef}
         >
           <AnimatePresence mode="wait">
             {messages.map((message) => {

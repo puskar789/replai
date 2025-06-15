@@ -9,6 +9,7 @@ export const syncEmailsToDatabase = async (
   emails: EmailMessage[],
   accountId: string,
 ) => {
+  let count = 0;
   console.log("Attempting to sync emails to the database", emails.length);
   // const limit = pLimit(10);
 
@@ -20,6 +21,11 @@ export const syncEmailsToDatabase = async (
     //   emails.map((email, index) => upsertEmail(email, accountId, index)),
     // );
     for (const email of emails) {
+      if (count == 5) {
+        count = 0;
+        await new Promise((resolve) => setTimeout(resolve, 60000));
+      }
+
       const body = turndown.turndown(email.body ?? email.bodySnippet ?? "");
       const embeddings = await getEmbeddings(body);
       console.log("Embeddings length: ", embeddings?.length);
@@ -36,6 +42,7 @@ export const syncEmailsToDatabase = async (
       });
 
       await upsertEmail(email, accountId, 0);
+      count++;
     }
   } catch (error) {
     console.error("Error syncing emails to the database", error);
