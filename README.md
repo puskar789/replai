@@ -5,28 +5,34 @@ Inbox overwhelmed? Don’t just reply — ReplAI.
 ReplAI is a modern, AI-powered email client that streamlines email management and composition. Built with Next.js, Gemini, NeonDB and Prisma, it enables users to sync emails, manage threads, and compose smart replies using AI. With features like real-time sync, full-text search, and intelligent suggestions, ReplAI enhances productivity and simplifies communication. Designed for performance and usability, it offers a seamless, responsive experience for professionals handling daily email workflows.
 
 # Features 🌟 #
+* **AI Assistant**: Ask questions about your emails and the AI assistant will use relevant email context retrieved via Orama vector search to respond intelligently.
+* **AI Smart Compose**: Compose emails or replies using AI that understands the entire email thread context if present, ensuring coherent and personalized replies.
+* **AI Autocomplete (Win + J)**: Speed up your writing with an AI autocomplete feature.
 * **Full Email Functionality**: Connect multiple email accounts via OAuth with Aurinko for syncing emails, sending and receiving messages, and composing new emails in threaded conversations.
-* **OTP Verification**: Enhance account security with OTP-based email verification during sign-up implemented using Nodemailer, ensuring only valid users access the platform.
-* **Profile Management**: Users can update their profile details and manage sessions efficiently through a user-friendly interface.
-* **Room Listings & CRUD Operations**: Users and admins can create, view, and delete rental room listings with detailed descriptions, pricing, and amenities, allows easy image uploads by providing drag and drop feature implemented using react dropzone, users can efficiently filter the rooms by location and also by price.
-* **Image Uploads & Carousels**: Upload multiple images for each roomm, facilitated by Firebase and view them in a beautiful, responsive Swiper.js-powered image carousel.
-* **Map Integration**: Pinpoint room locations using Mapbox geocoding, allowing users to visually locate listings on an interactive map.
-* **Admin Dashboard**: A dedicated analytics dashboard where admins can view user activity, room stats, and manage everything from one place using Recharts for visual insights, admin can also ban malicious users.
-* **Responsive UI Design**: Built with Tailwind CSS, Flowbite, and daisyUI, ensuring a modern, accessible experience.
+* **Real-time Syncing**: Initial and incremental email synchronization via APIs to ensure your inbox reflects the latest updates.
+* **Robust Authentication & Authorization**: Sign up and log in securely using Clerk, supporting session management and modern authentication methods.
+* **Instant Search**: Quickly search through emails using Orama's high-performance full-text search engine.
+* **Command Bar (Cmd + K)**: Boost navigation speed with a command palette for quick actions, improving the overall UX, facilitated by KBar.
+* **Rich Email Editing**: Compose emails using a full-featured, markdown-supported rich-text editor built with Tiptap.
+* **Responsive UI with ShadCN & Tailwind**: Elegant and functional UI crafted using ShadCN components and Tailwind CSS for seamless performance.
   
 # Tech Stack 🛠 #
-* **MongoDB**: NoSQL database used to store user, room, and OTP related data.
-* **Express.js**: A fast, unopinionated, minimalist web framework for Node.js that handles the server-side logic and API routing.
-* **React.js**: A powerful JavaScript library for building user interfaces, providing a responsive and dynamic front-end experience.
+* **Next.js**: React framework used to build the full-stack app with server-side rendering, routing, and API endpoints.
+* **Typescript**: Strongly typed JavaScript that improves code reliability and developer experience.
+* **NeonDB**: A fast, serverless PostgreSQL database used with Prisma to store all app data.
+* **Prisma ORM**: Type-safe, scalable ORM used to model and query the PostgreSQL database.
+* **Vercel AI SDK**: Faciliates streaming responses and provides hooks such as useChat to maintain real-time, persistent AI conversations between the user and assistant.
+* **Gemini 2.5 Flash**: Powers all AI interactions such as smart reply generation, auto-complete, and assistant responses with fast, context-aware outputs.
+* **Gemini Embedding EXP 03-07**: Utilized to generate high-quality embeddings for user emails and queries, enabling semantic vector search via Orama.
+* **Orama**: High-performance vector and full-text search engine used for contextual email search and AI assistant grounding.
+* **TRPC**: Type-safe API routing and data fetching strategy with seamless client-server integration.
+* **Clerk**: Authentication and user management system for secure sign-up, login, and session handling.
+* **Aurinko API**: Email sync and threading powered by Aurinko's email integration platform.
 * **Tailwind CSS**: Utility-first CSS framework for designing custom UIs quickly and responsively.
-* **Flowbite & daisyUI**: Tailwind CSS-based component libraries that offer prebuilt UI elements to accelerate design.
-* **Mapbox**: Mapping platform used for geocoding and displaying interactive room locations on maps.
-* **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine, enabling the server-side implementation.
-* **Firebase**: A platform developed by Google for creating mobile and web applications, used here for profile picture updates and room images uploading.
-* **Zustand**: A small, fast, and scalable state-management solution for React applications.
+* **ShadCN UI**: Known for its modular and flexible design, ShadCN UI provides a modern approach to building user interfaces.
 
 # Screenshots 📸 #
-Here are some screenshots showcasing the Wander Nest web app:
+Here are some screenshots showcasing the ReplAI web app:
 
 [Login and Sign Up Screen](#login-and-sign-up-screen)  
 [OTP Verification](#otp-verification)  
